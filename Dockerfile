@@ -1,13 +1,36 @@
-FROM debian:stretch-slim
+FROM debian:bookworm-slim
 
-MAINTAINER kiseru.io
+LABEL maintainer="kiseru.io"
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends --no-install-suggests -y httpie curl nmap wget procps lsof python-pip netcat jq telnet traceroute net-tools iputils-ping dnsutils &&   \
-    pip install --upgrade setuptools && \
-    pip install --upgrade sslyze && \
-    curl -sL https://github.com/trimstray/htrace.sh/archive/v1.0.7.tar.gz | tar xvz && ./htrace.sh-1.0.7/setup.sh install
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && apt-get install -y --no-install-recommends \
+    httpie \
+    curl \
+    nmap \
+    wget \
+    procps \
+    lsof \
+    python3 \
+    python3-pip \
+    netcat-openbsd \
+    jq \
+    telnet \
+    traceroute \
+    net-tools \
+    iputils-ping \
+    dnsutils \
+    ca-certificates \
+ && pip3 install --no-cache-dir --upgrade --break-system-packages setuptools sslyze \
+ && curl -sL https://github.com/trimstray/htrace.sh/archive/refs/tags/v1.0.7.tar.gz | tar xz \
+ && ./htrace.sh-1.0.7/setup.sh install \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 EXPOSE 80
 
-CMD netcat -kl -p 80 
+CMD ["/entrypoint.sh"]
