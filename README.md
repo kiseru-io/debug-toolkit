@@ -1,4 +1,4 @@
-# debug-toolkit
+# Debug Toolkit 
 
 ### Status
 [![Build and Push](https://github.com/kiseru-io/debug-toolkit/actions/workflows/docker.yml/badge.svg)](https://github.com/kiseru-io/debug-toolkit/actions/workflows/docker.yml)
